@@ -1,6 +1,6 @@
-# ARCU
+# ARCU Backend
 
-A type of social media service that has users, comments, posts, and messaging.
+A type of social media API clone that has users, comments, posts, and messaging.
 
 
 You can find the API documentation here: http://loclahost:8800/docs
@@ -8,7 +8,7 @@ You can find the API documentation here: http://loclahost:8800/docs
 
 Deployment of ARCU API server
 
-killing all gunicorn processes for cds-app
+killing all gunicorn processes for arcu
 ```sh
 for pid in $(ps -ef | grep "uvicorn.workers.UvicornWorker" | awk '{print $2}'); do kill -9 $pid; done
 ```
