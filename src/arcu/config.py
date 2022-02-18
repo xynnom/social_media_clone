@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_DB_CONN_STRING: str
 
+    JWT_SECRET: str
     authjwt_private_key: str
     authjwt_public_key: str
     authjwt_algorithm: str
