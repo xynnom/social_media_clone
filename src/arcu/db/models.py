@@ -28,6 +28,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     post_message = Column(String(125), index=True)
     date_created = Column(DateTime, default=dt.utcnow)
+    date_updated = Column(DateTime, default=dt.utcnow)
     owner_id = Column(Integer, ForeignKey("users.id"))
     
     owner =  relationship("User", back_populates="posts")
@@ -40,6 +41,7 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     comment = Column(String(125), index=True)
     date_created = Column(DateTime, default=dt.utcnow)
+    date_updated = Column(DateTime, default=dt.utcnow)
     owner_id = Column(Integer, ForeignKey("users.id"))
     parent_id = Column(Integer, ForeignKey("posts.id"))
 

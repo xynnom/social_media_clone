@@ -5,11 +5,10 @@ import passlib.hash as _hash
 
 
 async def get_user(username: str, db: Session) -> User:
-
-    # Check if username already exists.
     db_user = \
         db.query(models.User).filter_by(username=username).first()
     return db_user
+
 
 async def create_user(user: UserCreate, db: Session):
     db_user = models.User(
@@ -20,3 +19,5 @@ async def create_user(user: UserCreate, db: Session):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+

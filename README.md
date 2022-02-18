@@ -3,7 +3,7 @@
 A type of social media API clone that has users, comments, posts, and messaging.
 
 
-You can find the API documentation here: http://loclahost:8800/docs
+You can find the API documentation here: http://localhost:8800/docs
 
 
 Deployment of ARCU API server
