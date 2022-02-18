@@ -1,5 +1,4 @@
-from arcu.api import auth
-from arcu.api import users
+from arcu.api import users, posts
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
@@ -26,8 +25,8 @@ app = FastAPI(
     openapi_tags=tags_metadata)
 
 # register of Endpoints
-app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(posts.router)
 
 # CORS
 origins = ['*']

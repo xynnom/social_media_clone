@@ -1,39 +1,45 @@
-from fastapi import Depends, APIRouter
-from fastapi import security
+import fastapi
 from sqlalchemy.orm import Session
-from .auth import authenticate_user, create_token, get_current_user
+from ..db import auth, schemas, users as user_db
 from ..dependencies import get_db
-from ..db import users
-from ..db.schemas import JWTPayload, User, UserCreate
-from ..errors.base import DuplicateItem, AuthUnauthorized
+from ..errors import base as error
 
-router = APIRouter()
+
+router = fastapi.APIRouter()
 
 
 @router.post("/api/users")
-async def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = await users.get_user(user.username, db)
-    if db_user:
-        raise DuplicateItem
+async def create_user(
+    user: schemas.UserCreate,
+    db: Session = fastapi.Depends(get_db)
+    ):
     
-    return await users.create_user(user, db)
+    db_user = await user_db.get_user(user.username, db)
+    if db_user:
+        raise error.DuplicateItem
+    
+    await user_db.create_user(user, db)
+
+    return await auth.create_token(user)
 
 
 @router.post("/api/token")
 async def generate_token(
-        form_data: security.OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db),
+    form_data: fastapi.security.OAuth2PasswordRequestForm = fastapi.Depends(),
+    db: Session = fastapi.Depends(get_db),
     ):
     
-    user = await authenticate_user(
-        form_data.username, form_data.password, db)
+    user = await auth.authenticate_user(
+        form_data.username, form_data.password, db
+    )
 
     if not user:
-        raise AuthUnauthorized
+        raise error.AuthUnauthorized
 
-    return await create_token(user)
+    return await auth.create_token(user)
 
 
-@router.get("/api/users/me", response_model=User)
-async def get_user(user: User = Depends(get_current_user)):
+@router.get("/api/users/me", response_model=schemas.User)
+async def get_user(
+    user: schemas.User = fastapi.Depends(auth.get_current_user)):
     return user

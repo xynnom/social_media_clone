@@ -1,22 +1,25 @@
-from jose import JWTError, jwt
-from fastapi import Depends, APIRouter, HTTPException, status
+import fastapi
 from fastapi.security import OAuth2PasswordBearer
+from jose import jwt
 from sqlalchemy.orm import Session
-from ..config import get_settings
-from ..db import users, models
+from . import users as user_db
+from . import models, schemas
 from ..dependencies import get_db
-from ..db.schemas import JWTPayload, User, UserCreate
 from ..errors.base import AuthUnauthorized
+from ..config import get_settings
 
 
 settings = get_settings()
-router = APIRouter()
 oauth2schema = OAuth2PasswordBearer(tokenUrl="/api/token")
 
 
 async def authenticate_user(
-    username: str, password: str, db: Session = Depends(get_db)):
-    user = await users.get_user(username, db)
+        username: str, 
+        password: str, 
+        db: Session = fastapi.Depends(get_db)
+    ):
+
+    user = await user_db.get_user(username, db)
     if not user:
         return False
     if not user.verify_password(password):
@@ -24,8 +27,8 @@ async def authenticate_user(
     return user
 
 
-async def create_token(user: User):
-    user_obj = User.from_orm(user)
+async def create_token(user: schemas.User):
+    user_obj = schemas.User.from_orm(user)
 
     token = jwt.encode(user_obj.dict(), settings.JWT_SECRET)
 
@@ -33,12 +36,12 @@ async def create_token(user: User):
 
 
 async def get_current_user(
-        db: Session = Depends(get_db),
-        token: str = Depends(oauth2schema),
+        db: Session = fastapi.Depends(get_db),
+        token: str = fastapi.Depends(oauth2schema),
     ):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
         user = db.query(models.User).get(payload["id"])
     except:
         raise AuthUnauthorized
-    return User.from_orm(user)
+    return schemas.User.from_orm(user)
