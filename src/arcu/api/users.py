@@ -1,14 +1,18 @@
-import fastapi
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+
 from sqlalchemy.orm import Session
 from ..db import auth, schemas, users as user_db
 from ..dependencies import get_db
 from ..errors import base as error
 
 
-router = fastapi.APIRouter()
+router = APIRouter(
+    prefix='/users'
+)
 
 
-@router.post("/api/users")
+@router.post("")
 async def create_user(
     user: schemas.UserCreate,
     db: Session = fastapi.Depends(get_db)
@@ -23,9 +27,9 @@ async def create_user(
     return await auth.create_token(user)
 
 
-@router.post("/api/token")
+@router.post("")
 async def generate_token(
-    form_data: fastapi.security.OAuth2PasswordRequestForm = fastapi.Depends(),
+    form_data: OAuth2PasswordRequestForm = fastapi.Depends(),
     db: Session = fastapi.Depends(get_db),
     ):
     
@@ -39,7 +43,7 @@ async def generate_token(
     return await auth.create_token(user)
 
 
-@router.get("/api/users/me", response_model=schemas.User)
+@router.get("/me", response_model=schemas.User)
 async def get_user(
     user: schemas.User = fastapi.Depends(auth.get_current_user)):
     return user

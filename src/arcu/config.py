@@ -3,7 +3,7 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    app_name: str = "CDS APP API"
+    app_name: str = "arcu"
 
     POSTGRES_SERVER: str
     POSTGRES_USER: str

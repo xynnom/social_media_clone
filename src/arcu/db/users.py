@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .schemas import JWTPayload, UserCreate, User
+from .schemas import UserCreate, User
 from . import models
 import passlib.hash as _hash
 

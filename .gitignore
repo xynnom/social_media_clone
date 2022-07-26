@@ -5,5 +5,7 @@ __pycache__/
 *.sqlite*
 .coverage
 *.db
-
+.env*
 postgres_data/
+
+.vscode/

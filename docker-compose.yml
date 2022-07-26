@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-    db:
+    postgres:
         image: postgres:13-alpine
         env_file: .env
         logging:
@@ -18,7 +18,7 @@ services:
             dockerfile: Dockerfile
         env_file: .env
         depends_on:
-            - db
+            - postgres
         logging:
             options:
                 max-size: 10m

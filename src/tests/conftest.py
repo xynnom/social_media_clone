@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from fastapi.testclient import TestClient
-from cds_app.db.database import SessionLocal
+from arcu.db.database import SessionLocal
 from main import app
 
 

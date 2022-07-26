@@ -23,17 +23,6 @@ class User(UserBase):
         orm_mode = True
 
 
-class JWTPayload(BaseModel):
-    username: str
-    iss: str
-    sub: str
-    aud: str
-    iat: int
-    exp: int
-    jti: str
-    expiration: int
-
-
 class PostBase(BaseModel):
     post_message: str
 
